@@ -8,9 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useCart } from "@/hooks/useCart";
 import { TrashIcon } from "lucide-react";
+import { useEffect } from "react";
 
 export function Cart() {
+  const { state } = useCart();
+
+  useEffect(() => {
+    console.log(state?.product);
+  }, [state]);
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>

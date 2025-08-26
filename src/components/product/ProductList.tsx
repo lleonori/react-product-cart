@@ -13,8 +13,11 @@ import { useQuery } from "@tanstack/react-query";
 import { ShoppingBag } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "../ui/button";
+import { useCart } from "@/hooks/useCart";
 
 export function ProductList() {
+  const { dispatch } = useCart();
+
   const products = useQuery({ queryKey: ["products"], queryFn: getProducts });
 
   const totalPrice = useMemo(() => {
@@ -44,7 +47,14 @@ export function ProductList() {
             <TableCell>{product.price}</TableCell>
             <TableCell>{product.stock}</TableCell>
             <TableCell>
-              <Button variant="secondary" size="icon" className="size-8">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="size-8"
+                onClick={() =>
+                  dispatch({ type: "ADD_PRODUCT", payload: product })
+                }
+              >
                 <ShoppingBag />
               </Button>
             </TableCell>
