@@ -11,9 +11,17 @@ export type CartState = {
   totalQty: number;
 };
 
-export type CartAction = {
-  type: ActionType;
-  payload: CartItem;
-};
+export type CartAction =
+  | {
+      type: "ADD_PRODUCT";
+      payload: CartItem;
+    }
+  | {
+      type: "REMOVE_PRODUCT";
+      payload: CartItem;
+    }
+  | {
+      type: "CLEAR_CART";
+    };
 
-export type ActionType = "ADD_PRODUCT" | "REMOVE_PRODUCT";
+export type ActionType = CartAction["type"];

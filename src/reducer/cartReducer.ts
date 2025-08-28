@@ -35,18 +35,22 @@ export function cartReducer(state: CartState, action: CartAction) {
     }
   } else if (action.type === "REMOVE_PRODUCT") {
     const findItem = state.items.find((item) => item.id === action.payload.id);
-
-    return {
-      ...state,
-      items: [
-        ...state.items,
-        state.items.map((item) =>
-          item.id === findItem?.id
-            ? { ...findItem, qty: findItem.qty - 1 }
-            : item
-        ),
-      ],
-    };
+    if (findItem && findItem.qty === 0) {
+      return { findItem, ...state };
+    } else {
+      return {
+        ...state,
+        items: [
+          ...state.items.map((item) =>
+            item.id === findItem?.id && item.qty > 0
+              ? { ...findItem, qty: findItem.qty - 1 }
+              : item
+          ),
+        ],
+      };
+    }
+  } else if (action.type === "CLEAR_CART") {
+    return intialCartState;
   }
   throw Error("Unknown action.");
 }

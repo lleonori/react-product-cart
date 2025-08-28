@@ -1,10 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Cart } from "./components/cart/Cart";
-import { Layout } from "./components/layout/Layout";
-import { ProductList } from "./components/product/ProductList";
-import { CartContext } from "./contexts/cartContext";
 import { useReducer } from "react";
+import { Outlet } from "react-router";
+import { CartContext } from "./contexts/cartContext";
 import { cartReducer, intialCartState } from "./reducer/cartReducer";
+import { Layout } from "./components/layout/Layout";
 
 function App() {
   const queryClient = new QueryClient();
@@ -14,10 +13,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <CartContext value={{ state, dispatch }}>
         <Layout>
-          <div className="flex justify-between gap-14 p-4">
-            <ProductList />
-            <Cart />
-          </div>
+          <Outlet />
         </Layout>
       </CartContext>
     </QueryClientProvider>

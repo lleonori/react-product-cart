@@ -21,8 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { useNavigate } from "react-router";
 
 export function Cart() {
+  const navigate = useNavigate();
   const { state, dispatch } = useCart();
 
   const totalQty = useMemo(() => {
@@ -40,7 +42,10 @@ export function Cart() {
           Lista degli articoli presenti nel carrello
         </CardDescription>
         <CardAction>
-          <Button variant="link">
+          <Button
+            onClick={() => dispatch({ type: "CLEAR_CART" })}
+            variant="link"
+          >
             <TrashIcon />
           </Button>
         </CardAction>
@@ -99,7 +104,11 @@ export function Cart() {
         </div>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          onClick={() => navigate("/checkout")}
+        >
           Procedi
         </Button>
       </CardFooter>
