@@ -35,8 +35,11 @@ export function cartReducer(state: CartState, action: CartAction) {
     }
   } else if (action.type === "REMOVE_PRODUCT") {
     const findItem = state.items.find((item) => item.id === action.payload.id);
-    if (findItem && findItem.qty === 0) {
-      return { findItem, ...state };
+    if (findItem && findItem.qty === 1) {
+      return {
+        ...state,
+        items: [...state.items.filter((item) => item.id !== findItem.id)],
+      };
     } else {
       return {
         ...state,

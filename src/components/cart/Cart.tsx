@@ -35,7 +35,7 @@ export function Cart() {
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card>
       <CardHeader>
         <CardTitle>Articoli nel carrello</CardTitle>
         <CardDescription>
@@ -105,6 +105,7 @@ export function Cart() {
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Button
+          disabled={totalQty === 0}
           type="submit"
           className="w-full"
           onClick={() => navigate("/checkout")}
