@@ -4,35 +4,26 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCart } from "@/hooks/useCart";
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingBag } from "lucide-react";
-import { useMemo } from "react";
 import { Button } from "../ui/button";
-import { useCart } from "@/hooks/useCart";
 
 export function ProductList() {
   const { dispatch } = useCart();
 
   const products = useQuery({ queryKey: ["products"], queryFn: getProducts });
 
-  const totalPrice = useMemo(() => {
-    return products.data?.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.price,
-      0
-    );
-  }, [products]);
-
   return (
     <Table>
-      <TableCaption>Lista dei prodotti presenti.</TableCaption>
+      <TableCaption>Prodotti presenti.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">ID Prodotto</TableHead>
+          <TableHead>ID Prodotto</TableHead>
           <TableHead>Nome</TableHead>
           <TableHead>Prezzo</TableHead>
           <TableHead>Disponibiltà</TableHead>
@@ -42,8 +33,8 @@ export function ProductList() {
       <TableBody>
         {products.data?.map((product) => (
           <TableRow key={product.id}>
-            <TableCell className="font-medium">{product.id}</TableCell>
-            <TableCell>{product.name}</TableCell>
+            <TableCell>{product.id}</TableCell>
+            <TableCell className="font-medium">{product.name}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell>{product.stock}</TableCell>
             <TableCell>
@@ -52,7 +43,10 @@ export function ProductList() {
                 size="icon"
                 className="size-8"
                 onClick={() =>
-                  dispatch({ type: "ADD_PRODUCT", payload: product })
+                  dispatch({
+                    type: "ADD_PRODUCT",
+                    payload: { ...product, qty: 1 },
+                  })
                 }
               >
                 <ShoppingBag />
@@ -61,12 +55,6 @@ export function ProductList() {
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{totalPrice?.toFixed(2)}</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   );
 }

@@ -9,14 +9,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
-import { TrashIcon } from "lucide-react";
-import { useEffect } from "react";
+import { MinusCircle, PlusCircle, TrashIcon } from "lucide-react";
+import { useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 export function Cart() {
-  const { state } = useCart();
+  const { state, dispatch } = useCart();
 
-  useEffect(() => {
-    console.log(state?.product);
+  const totalQty = useMemo(() => {
+    return state.items.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.qty,
+      0
+    );
   }, [state]);
 
   return (
@@ -33,11 +46,57 @@ export function Cart() {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2"></div>
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Table>
+              <TableCaption>Prodotti nel carrello.</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Prezzo</TableHead>
+                  <TableHead>Quantità</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {state.items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">{item.name}</TableCell>
+                    <TableCell>{item.price}</TableCell>
+                    <TableCell>{item.qty}</TableCell>
+                    <TableCell className="space-x-2">
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="size-8"
+                        onClick={() =>
+                          dispatch({ type: "ADD_PRODUCT", payload: item })
+                        }
+                      >
+                        <PlusCircle />
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="size-8"
+                        onClick={() =>
+                          dispatch({ type: "REMOVE_PRODUCT", payload: item })
+                        }
+                      >
+                        <MinusCircle />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={2}>Totale</TableCell>
+                  <TableCell>{totalQty}</TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
           </div>
-        </form>
+        </div>
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Button type="submit" className="w-full">
